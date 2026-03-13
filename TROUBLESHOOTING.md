@@ -407,6 +407,159 @@ chmod +x configure-macbook.sh
 4. Try manual connection with IP address
 5. Check Syncthing logs for errors
 
+## Ollama Issues
+
+### Cannot connect to remote Mac Mini
+
+**Problem:** "connection refused" when using remote Ollama
+
+**Solutions:**
+
+1. Verify Mac Mini Ollama is running
+   ```bash
+   # On Mac Mini
+   brew services list | grep ollama
+   ```
+
+2. Check Mac Mini Ollama is configured for remote access
+   ```bash
+   # On Mac Mini, add to ~/.zshrc
+   export OLLAMA_HOST=0.0.0.0:11434
+   
+   # Restart Ollama
+   brew services restart ollama
+   ```
+
+3. Test connection from MacBook
+   ```bash
+   curl http://MAC-MINI-IP:11434/api/tags
+   ```
+
+4. Check firewall on Mac Mini
+   - System Settings > Network > Firewall
+   - Ensure Ollama is allowed
+
+5. Verify both devices on same network
+   ```bash
+   ping MAC-MINI-IP
+   ```
+
+### Ollama using wrong server
+
+**Problem:** Ollama connects to wrong server or doesn't use remote
+
+**Solutions:**
+
+1. Check OLLAMA_HOST environment variable
+   ```bash
+   echo $OLLAMA_HOST
+   ```
+
+2. Reload shell configuration
+   ```bash
+   source ~/.zshrc
+   ```
+
+3. Override for single command
+   ```bash
+   # Use local
+   OLLAMA_HOST="" ollama list
+   
+   # Use specific remote
+   OLLAMA_HOST="http://192.168.1.100:11434" ollama list
+   ```
+
+### Model download fails
+
+**Problem:** "error pulling model" or timeout
+
+**Solutions:**
+
+1. Check internet connection
+2. Verify disk space
+   ```bash
+   df -h
+   ```
+
+3. Try downloading with curl first
+   ```bash
+   curl -I https://registry.ollama.ai/v2/
+   ```
+
+4. Download smaller model first
+   ```bash
+   ollama pull llama3.2:3b
+   ```
+
+### Local model runs slow on MacBook
+
+**Problem:** Model responses are very slow
+
+**Solutions:**
+
+1. Check RAM usage
+   ```bash
+   htop
+   ```
+
+2. Close other applications
+3. Use smaller model
+   ```bash
+   ollama pull llama3.2:3b  # Instead of 7B or 14B
+   ```
+
+4. Consider using remote Mac Mini instead
+
+### Switch between local and remote not working
+
+**Problem:** ollama-local and ollama-remote aliases don't work
+
+**Solutions:**
+
+1. Reload shell configuration
+   ```bash
+   source ~/.zshrc
+   ```
+
+2. Manually set environment variable
+   ```bash
+   # Local
+   export OLLAMA_HOST=""
+   
+   # Remote
+   export OLLAMA_HOST="http://192.168.1.100:11434"
+   ```
+
+3. Check if aliases exist
+   ```bash
+   alias | grep ollama
+   ```
+
+### "model not found" error
+
+**Problem:** Model exists on Mac Mini but shows as not found
+
+**Cause:** OLLAMA_HOST pointing to wrong server or local Ollama
+
+**Solutions:**
+
+1. Verify OLLAMA_HOST is set correctly
+   ```bash
+   echo $OLLAMA_HOST
+   # Should show: http://YOUR-MACMINI-IP:11434
+   ```
+
+2. List available models on remote
+   ```bash
+   ollama list
+   ```
+
+3. Pull model to remote if needed
+   ```bash
+   # On Mac Mini
+   ollama pull qwen2.5:14b
+   ```
+
 ## Performance Issues
 
 ### System running slow after setup

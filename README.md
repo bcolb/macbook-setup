@@ -10,6 +10,7 @@ This repository contains scripts to set up a MacBook with:
 - Financial analysis environment (Python, QuantLib, OpenBB, pandas-ta)
 - AWS CLI and cloud tools
 - Database clients (TablePlus, NoSQL Workbench, SQLite)
+- Optional AI models via Ollama (optimized for MacBook Air)
 - System optimizations for portable development
 
 ## Prerequisites
@@ -43,6 +44,9 @@ bash install-vscode-extensions.sh
 
 # Apply MacBook optimizations
 bash configure-macbook.sh
+
+# Set up AI Models (Ollama) for AI (optional)
+bash setup-ai-models-macbook.sh
 ```
 
 ## Scripts
@@ -132,6 +136,22 @@ Applies MacBook-specific optimizations:
 - Python and development shortcuts
 
 **Time:** 2 minutes
+
+### setup-ai-models-macbook.sh
+
+Configures Ollama for MacBook Air with three strategies:
+
+1. **Remote Only** - Use Mac Mini for all AI (recommended for battery)
+2. **Lightweight Local** - Install llama3.2:3b for offline use (2GB)
+3. **Hybrid** - Remote by default, local fallback when offline
+
+**Features:**
+- Interactive setup wizard
+- Automatic remote server detection
+- Shell aliases for easy switching
+- Storage and battery optimized
+
+**Time:** 3-10 minutes (depending on model downloads)
 
 ## Post-Setup Configuration
 
@@ -266,6 +286,104 @@ ports                # Show listening ports
 venv-create          # Create new venv
 venv-activate        # Activate venv in current directory
 ```
+
+## Ollama AI Models (Optional)
+
+The `setup-ai-models-macbook.sh` script provides three strategies optimized for MacBook Air:
+
+### Strategy 1: Remote Only (Recommended)
+
+Use your Mac Mini or other server for all AI workloads:
+
+```bash
+bash setup-ai-models-macbook.sh
+# Choose option 1
+# Enter Mac Mini IP address
+
+# Usage
+ollama run qwen2.5:14b "explain this code"
+ollama run qwen2.5-coder:7b "write a Python script"
+```
+
+**Pros:**
+- No local storage used (0 GB)
+- Minimal battery impact
+- Access to powerful models
+- MacBook stays fast
+
+**Cons:**
+- Requires network connection
+- Depends on Mac Mini being on
+
+### Strategy 2: Lightweight Local (Offline Use)
+
+Install one small model for offline work:
+
+```bash
+bash setup-ai-models-macbook.sh
+# Choose option 2
+
+# Usage
+ollama run llama3.2:3b "quick question"
+```
+
+**Pros:**
+- Works offline (airplane, coffee shop)
+- Small footprint (2GB)
+- Fast responses
+
+**Cons:**
+- Lower quality than larger models
+- Battery drain when active
+- Limited capabilities
+
+### Strategy 3: Hybrid (Best of Both)
+
+Remote by default, local fallback:
+
+```bash
+bash setup-ai-models-macbook.sh
+# Choose option 3
+
+# Default: uses Mac Mini
+ollama run qwen2.5:14b "complex task"
+
+# Switch to local when offline
+ollama-local
+ollama run llama3.2:3b "simple task"
+
+# Back to remote
+ollama-remote
+```
+
+**Pros:**
+- Flexibility for all situations
+- Best performance when on network
+- Fallback when offline
+
+**Cons:**
+- Uses 2GB storage for local model
+- Requires initial setup of both
+
+### Recommended Model by Use Case
+
+| Use Case | Model | Location |
+|----------|-------|----------|
+| Complex code generation | qwen2.5-coder:7b | Mac Mini |
+| Code explanation | qwen2.5:14b | Mac Mini |
+| Quick questions | llama3.2:3b | Local (if offline) |
+| Learning/experimentation | Various | Mac Mini |
+| Offline work | llama3.2:3b | Local |
+| Battery preservation | Any | Mac Mini (remote) |
+
+### Battery Impact
+
+| Configuration | Battery Drain |
+|---------------|---------------|
+| No Ollama | Baseline |
+| Remote (Mac Mini) | +2-3% per hour |
+| Local llama3.2:3b (active) | +15-25% per hour |
+| Local qwen2.5:7b (active) | +30-40% per hour |
 
 ## Helpful Scripts
 
