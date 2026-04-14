@@ -20,6 +20,8 @@ This repository contains scripts to set up a MacBook with:
 - Internet connection
 - Admin access
 
+> **Note:** All scripts are safe to re-run. Shell configuration blocks (pyenv, brew, aliases) are written to dotfiles idempotently — they check whether the config already exists before appending, so running a script multiple times will not create duplicate entries.
+
 ## Quick Start
 
 ```bash

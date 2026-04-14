@@ -3,7 +3,8 @@
 
 echo "Configuring MacBook for portable development..."
 
-# Add to ~/.zshrc
+# Add to ~/.zshrc (idempotent — skip if already configured)
+if ! grep -q "# MacBook Development Configuration" ~/.zshrc 2>/dev/null; then
 cat >> ~/.zshrc << 'ZSHRC'
 
 # MacBook Development Configuration
@@ -42,6 +43,7 @@ precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 
 ZSHRC
+fi
 
 # Create helpful scripts directory
 mkdir -p ~/scripts

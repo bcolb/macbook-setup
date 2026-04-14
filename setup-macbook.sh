@@ -28,8 +28,8 @@ echo ""
 echo -e "${GREEN}2. Installing Homebrew${NC}"
 if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+
+    grep -qF 'brew shellenv' ~/.zprofile 2>/dev/null || echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
     eval "$(/opt/homebrew/bin/brew shellenv)"
 else
     echo "Homebrew already installed"
@@ -74,7 +74,8 @@ echo ""
 echo -e "${GREEN}6. Installing Python Environment (pyenv)${NC}"
 brew install pyenv pyenv-virtualenv
 
-cat >> ~/.zprofile << 'PYENV'
+if ! grep -qF 'PYENV_ROOT' ~/.zprofile 2>/dev/null; then
+    cat >> ~/.zprofile << 'PYENV'
 
 # Pyenv configuration
 export PYENV_ROOT="$HOME/.pyenv"
@@ -82,6 +83,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 PYENV
+fi
 
 source ~/.zprofile
 
